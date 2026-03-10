@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Гагарин в космосе: 65 лет легендарному полету!</title>
+    <style>
+        :root { 
+            --main-color: #00d2ff; /* Неоновый синий */
+            --bg-dark: #050a10; 
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: white; text-align: center; padding: 20px; transition: 0.5s; margin: 0; }
+        
+        #game-container { 
+            max-width: 700px; 
+            margin: 10px auto; 
+            background: rgba(15, 20, 30, 0.95); 
+            padding: 25px; 
+            border-radius: 20px; 
+            border: 2px solid var(--main-color); 
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); 
+        }
+
+        .theme-pic { 
+            width: 100%; 
+            height: auto; 
+            max-height: 350px; 
+            object-fit: contain; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            background: #000; 
+        }
+
+        .screen { display: none; }
+        .active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .option-btn { 
+            display: block; width: 100%; margin: 8px 0; padding: 12px; 
+            border: 1px solid var(--main-color); background: rgba(0,210,255,0.05); 
+            color: white; cursor: pointer; border-radius: 10px; transition: 0.2s; 
+            font-size: 15px; text-align: left; 
+        }
+        .option-btn:hover:not(:disabled) { background: rgba(0,210,255,0.2); }
+        
+        .correct { background: #2ecc71 !important; border-color: #2ecc71; font-weight: bold; color: #000; }
+        .wrong { background: #e74c3c !important; border-color: #e74c3c; opacity: 0.8; }
+        
+        #commentary { 
+            margin: 15px 0; padding: 15px; border-radius: 8px; 
+            background: rgba(255,255,255,0.08); display: none; 
+            text-align: left; border-left: 5px solid var(--main-color); 
+            font-size: 0.95em; 
+        }
+
+        .btn-main { 
+            background: var(--main-color); color: #000; 
+            padding: 14px 40px; border: none; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; text-transform: uppercase; 
+            margin-top: 10px; box-shadow: 0 0 15px rgba(0,210,255,0.3);
+        }
+        
+        input#p-name { 
+            padding: 12px; width: 80%; border-radius: 8px; 
+            border: 1px solid var(--main-color); background: #000; 
+            color: white; font-size: 16px; text-align: center; margin-bottom: 10px; 
+        }
+        
+        .video-container { display: none; margin-top: 20px; border-radius: 15px; overflow: hidden; border: 2px solid var(--main-color); background: black; }
+        video#final-video { width: 100%; display: block; max-height: 400px; }
+        
+        /* Цвет для режима Королева */
+        .easter-egg { --main-color: #0088ff !important; }
+        
+        .stats-text { color: var(--main-color); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="start-screen" class="screen active">
+        <h1 style="color: var(--main-color); margin-top:0;">65 лет легендарному полету! ПОЕХАЛИ! 🚀</h1>
+        <img src="start.png" class="theme-pic" alt="Гагарин">
+        <p>Пройди викторину о первом полете человека в космос!</p>
+        <input type="text" id="p-name" placeholder="Введите имя пилота..." maxlength="15">
+        <br>
+     <button class="btn-main" onclick="start()">Взлёт!</button>
+        <p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Автор проекта:</strong> Олефиренко Владимир, ученик 4Б класса</p>
+		<p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Руководитель:</strong> Кулешина Лариса Николаевна</p>
+		<p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Школа:</strong> ГАОУ МО "Химкинский лицей"</p>
+    </div>
+
+    <div id="quiz-screen" class="screen">
+        <div style="display:flex; justify-content: space-between; margin-bottom: 10px;" class="stats-text">
+            <span id="display-name"></span>
+            <span>Вопрос: <span id="q-num">1</span>/13 | Счёт: <span id="score">0</span></span>
+        </div>
+        <img id="q-img" src="" class="theme-pic">
+        <h3 id="q-text" style="margin: 10px 0; font-size: 1.1em;"></h3>
+        <div id="options"></div>
+        <div id="commentary"></div>
+        <button id="next-btn" class="btn-main" style="display:none" onclick="next()">Дальше →</button>
+    </div>
+
+    <div id="finish-screen" class="screen">
+        <h2 id="final-title" style="color: var(--main-color);">Миссия успешно завершена! 🎉</h2>
+        <h3 id="final-res" style="color: white; border: 1px solid var(--main-color); display: inline-block; padding: 10px 20px; border-radius: 10px;"></h3>
+        
+        <div class="video-container" id="vid-container">
+            <video id="final-video" controls playsinline preload="metadata">
+                <source src="gagarin_video.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div style="margin-top: 20px; border: 1px dashed var(--main-color); padding: 15px; background: rgba(0,210,255,0.05);">
+            <h4 style="color: var(--main-color); margin-top: 0;">🏆 Глобальный рейтинг пилотов:</h4>
+            <button class="btn-main" onclick="window.open('https://forms.gle/wEzcvEmYMDcgfKW38')">Записать результат</button>
+        </div>
+        <button class="btn-main" onclick="location.reload()" style="margin-top:15px; background:#222; color:#fff; padding: 10px 20px;">Заново</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            q: "Когда состоялся первый полет человека в космос?",
+            img: "q1.jpg",
+            ans: [
+                {t: "4 октября 1957 года", ok: false, c: "Неверно, в этот день состоялся запуск первого искусственного 'Спутника-1'"},
+                {t: "12 апреля 1961 года", ok: true, c: "Верно, запомни эту историческую дату!"},
+                {t: "9 марта 1934 года", ok: false, c: "Неверно, это День Рождения Юрия Гагарина!"}
+            ]
+        },
+        {
+            q: "Как звали первого космонавта Земли?",
+            img: "q2.jpg",
+            ans: [
+                {t: "Герман Степанович Титов", ok: false, c: "Неверно, Титов - дублер Гагарина, космонавт №2."},
+                {t: "Алексей Архипович Леонов", ok: false, c: "Неверно, Леонов - это космонавт, первым вышедший в открытый космос."},
+                {t: "Юрий Алексеевич Гагарин", ok: true, c: "Верно!"}
+            ]
+        },
+        {
+            q: "Как назывался космический корабль Гагарина?",
+            img: "q3.jpg",
+            ans: [
+                {t: "Восток-1", ok: true, c: "Верно! Первый в мире пилотируемый корабль."},
+                {t: "Союз-1", ok: false, c: "Неверно, это следующее поколение космических кораблей."},
+                {t: "Буран", ok: false, c: "Неверно, это многоразовый автоматический корабль-ракетоплан."}
+            ]
+        },
+        {
+            q: "Кто был главным конструктором космической программы СССР?",
+            img: "q4.jpg",
+            ans: [
+                {t: "Константин Эдуардович Циолковский", ok: false, c: "Неверно, это основоположник космической теории."},
+                {t: "Сергей Павлович Королев", ok: true, c: "Верно! Советский учёный, конструктор ракетных систем."},
+                {t: "Глеб Евгеньевич Лозино-Лозинский", ok: false, c: "Неверно, это конструктор 'Бурана'."}
+            ]
+        },
+        {
+            q: "Какую фразу произнёс Гагарин в момент старта?",
+            img: "q5.jpg",
+            ans: [
+                {t: "«Вперёд, к звёздам!»", ok: false, c: "Неверно."},
+                {t: "«Полетели!»", ok: false, c: "Неверно."},
+                {t: "«Поехали!»", ok: true, c: "Верно! Легендарные слова."}
+            ]
+        },
+        {
+            q: "Зачем на шлеме в последний момент написали «СССР»?",
+            img: "q6.jpg",
+            ans: [
+                {t: "Чтобы его не перепутали со шпионом", ok: true, c: "Верно! Чтобы люди не приняли его за врага."},
+                {t: "Для красоты", ok: false, c: "Нет, только для безопасности."},
+                {t: "Так требовали правила", ok: false, c: "Нет, это была импровизация спецслужб."}
+            ]
+        },
+        {
+            q: "Что Гагарин делал в космосе во время полета?",
+            img: "q7.jpg",
+            ans: [
+                {t: "Сочинял новые песни", ok: false, c: "Неверно, хотя во время он напевал известные песни."},
+                {t: "Ел и пил из тюбиков", ok: true, c: "Верно! Он проверил, может ли человек глотать пищу в невесомости."},
+                {t: "Спал", ok: false, c: "Неверно, для сна полет был слишком коротким."}
+            ]
+        },
+        {
+            q: "Сколько времени длился первый полёт?",
+            img: "q8.jpg",
+            ans: [
+                {t: "108 минут", ok: true, c: "Верно! 108 минут славы."},
+                {t: "Весь день", ok: false, c: "Неверно."},
+                {t: "Более суток", ok: false, c: "Неверно, это рекорд Германа Титова."}
+            ]
+        },
+        {
+            q: "Сколько витков вокруг Земли он совершил?",
+            img: "q9.jpg",
+            ans: [
+                {t: "2 витка", ok: false, c: "Неверно."},
+                {t: "5 витков", ok: false, c: "Неверно."},
+                {t: "1 виток", ok: true, c: "Верно! Ровно один круг вокруг планеты."}
+            ]
+        },
+        {
+            q: "Почему код «125» лежал в конверте?",
+            img: "q10.jpg",
+            ans: [
+                {t: "Чтобы не узнали враги", ok: false, c: "Нет, враги тут ни при чем."},
+                {t: "Это была проверка психики", ok: true, c: "Верно! Считалось: если пилот вскрыл конверт и ввел код — он в здравом уме."},
+                {t: "Это был секрет Королева", ok: false, c: "Не совсем."}
+            ]
+        },
+        {
+            q: "Какой позывной был у Юрия Гагарина?",
+            img: "q11.jpg",
+            ans: [
+                {t: "Заря", ok: false, c: "Неверно, это позывной 'ЦУП'- Центра управления полетами."},
+                {t: "Кедр", ok: true, c: "Верно, это был его личный позывной, привилегия первого космонавта."},
+                {t: "Орел", ok: false, c: "Неверно, 'Орел' - позывной Германа Титова."}
+            ]
+        },
+        {
+            q: "Как Гагарин вернулся на Землю?",
+            img: "q12.jpg",
+            ans: [
+                {t: "Внутри капсулы", ok: false, c: "Неверно, капсула приземлилась пустой."},
+                {t: "Катапультировался и приземлился на парашюте", ok: true, c: "Верно! На высоте 7 км он покинул капсулу и спускался отдельно."},
+                {t: "Сел в океан", ok: false, c: "Неверно, он приземлился в поле."}
+            ]
+        },
+        {
+            q: "В каком звании Гагарин улетал в космос?",
+            img: "q13.png",
+            ans: [
+                {t: "Майор", ok: false, c: "В этом звании он уже принимал поздравления на Земле."},
+                {t: "Старший лейтенант", ok: true, c: "Верно! А вернулся уже майором — его повысили сразу на два звания."},
+                {t: "Капитан", ok: false, c: "Нет, капитаном он пробыл всего несколько минут в приказе."}
+            ]
+        }
+    ];
+
+    let current = 0, score = 0, name = "", isBoss = false;
+
+    function start() {
+        name = document.getElementById('p-name').value.trim();
+        if(!name) return alert("Введите имя пилота!");
+        if(name.toLowerCase().replace('ё', 'е') === 'королев') {
+            isBoss = true;
+            document.body.classList.add('easter-egg');
+        }
+        document.getElementById('display-name').innerText = "Пилот: " + name;
+        document.getElementById('start-screen').classList.remove('active');
+        document.getElementById('quiz-screen').classList.add('active');
+        show();
+    }
+
+    function show() {
+        let q = questions[current];
+        document.getElementById('q-img').src = q.img;
+        document.getElementById('q-text').innerText = q.q;
+        document.getElementById('q-num').innerText = current + 1;
+        let optDiv = document.getElementById('options');
+        optDiv.innerHTML = '';
+        document.getElementById('commentary').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+
+        q.ans.forEach(a => {
+            let b = document.createElement('button');
+            b.className = 'option-btn';
+            b.innerText = a.t;
+            b.onclick = () => {
+                document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+                document.getElementById('commentary').innerText = a.c;
+                document.getElementById('commentary').style.display = 'block';
+                if(a.ok || isBoss) { b.classList.add('correct'); score++; } 
+                else { 
+                    b.classList.add('wrong'); 
+                    document.querySelectorAll('.option-btn').forEach((btn, idx) => {
+                        if(questions[current].ans[idx].ok) btn.classList.add('correct');
+                    });
+                }
+                document.getElementById('score').innerText = score;
+                document.getElementById('next-btn').style.display = 'block';
+            };
+            optDiv.appendChild(b);
+        });
+    }
+
+    function next() {
+        current++;
+        if(current < questions.length) show();
+        else finish();
+    }
+
+    function finish() {
+        document.getElementById('quiz-screen').classList.remove('active');
+        document.getElementById('finish-screen').classList.add('active');
+        document.getElementById('final-res').innerText = `Твой результат: ${score} из ${questions.length}`;
+        if(isBoss) document.getElementById('final-title').innerText = "Главный Конструктор: Королев";
+        
+        const video = document.getElementById('final-video');
+        document.getElementById('vid-container').style.display = 'block';
+        video.load();
+        video.play().catch(e => console.log("Видео готово к просмотру"));
+    }
+</script>
+
+</body>
+</html>
