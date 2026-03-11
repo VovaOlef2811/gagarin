@@ -2,40 +2,19 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Гагарин в космосе: 65 лет легендарному полёту!</title>
     <style>
         :root { 
-            --main-color: #00d2ff;
+            --main-color: #00d2ff; /* Неоновый синий */
             --bg-dark: #050a10; 
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html, body {
-            width: 100%;
-            overflow-x: hidden;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--bg-dark);
-            color: white;
-            text-align: center;
-            padding: 12px;
-            transition: 0.5s;
-            margin: 0;
-            -webkit-text-size-adjust: 100%;
-        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: white; text-align: center; padding: 20px; transition: 0.5s; margin: 0; }
         
         #game-container { 
-            width: 100%;
             max-width: 700px; 
             margin: 10px auto; 
             background: rgba(15, 20, 30, 0.95); 
-            padding: 20px; 
+            padding: 25px; 
             border-radius: 20px; 
             border: 2px solid var(--main-color); 
             box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); 
@@ -49,234 +28,50 @@
             border-radius: 12px; 
             margin-bottom: 15px; 
             background: #000; 
-            display: block;
         }
 
         .screen { display: none; }
         .active { display: block; animation: fadeIn 0.5s; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .option-btn { 
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 14px 16px;
-            border: 1px solid var(--main-color);
-            background: rgba(0,210,255,0.05); 
-            color: white;
-            cursor: pointer;
-            border-radius: 12px;
-            transition: 0.2s;
-            font-size: 16px;
-            line-height: 1.4;
-            text-align: left;
-            word-break: break-word;
+            display: block; width: 100%; margin: 8px 0; padding: 12px; 
+            border: 1px solid var(--main-color); background: rgba(0,210,255,0.05); 
+            color: white; cursor: pointer; border-radius: 10px; transition: 0.2s; 
+            font-size: 15px; text-align: left; 
         }
-
-        .option-btn:hover:not(:disabled) {
-            background: rgba(0,210,255,0.2);
-        }
-
-        .option-btn:disabled {
-            cursor: default;
-            opacity: 1;
-        }
+        .option-btn:hover:not(:disabled) { background: rgba(0,210,255,0.2); }
         
-        .correct {
-            background: #2ecc71 !important;
-            border-color: #2ecc71;
-            font-weight: bold;
-            color: #000;
-        }
-
-        .wrong {
-            background: #e74c3c !important;
-            border-color: #e74c3c;
-            opacity: 0.9;
-        }
+        .correct { background: #2ecc71 !important; border-color: #2ecc71; font-weight: bold; color: #000; }
+        .wrong { background: #e74c3c !important; border-color: #e74c3c; opacity: 0.8; }
         
         #commentary { 
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 10px; 
-            background: rgba(255,255,255,0.08);
-            display: none; 
-            text-align: left;
-            border-left: 5px solid var(--main-color); 
-            font-size: 0.98em;
-            line-height: 1.5;
-            word-break: break-word;
+            margin: 15px 0; padding: 15px; border-radius: 8px; 
+            background: rgba(255,255,255,0.08); display: none; 
+            text-align: left; border-left: 5px solid var(--main-color); 
+            font-size: 0.95em; 
         }
 
         .btn-main { 
-            background: var(--main-color);
-            color: #000; 
-            padding: 14px 28px;
-            border: none;
-            border-radius: 30px; 
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            margin-top: 10px;
-            box-shadow: 0 0 15px rgba(0,210,255,0.3);
-            font-size: 15px;
-            max-width: 100%;
+            background: var(--main-color); color: #000; 
+            padding: 14px 40px; border: none; border-radius: 30px; 
+            font-weight: bold; cursor: pointer; text-transform: uppercase; 
+            margin-top: 10px; box-shadow: 0 0 15px rgba(0,210,255,0.3);
         }
         
         input#p-name { 
-            padding: 12px;
-            width: 100%;
-            max-width: 420px;
-            border-radius: 8px; 
-            border: 1px solid var(--main-color);
-            background: #000; 
-            color: white;
-            font-size: 16px;
-            text-align: center;
-            margin-bottom: 10px; 
+            padding: 12px; width: 80%; border-radius: 8px; 
+            border: 1px solid var(--main-color); background: #000; 
+            color: white; font-size: 16px; text-align: center; margin-bottom: 10px; 
         }
         
-        .video-container {
-            display: none;
-            margin-top: 20px;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 2px solid var(--main-color);
-            background: black;
-            width: 100%;
-        }
-
-        video#final-video {
-            width: 100%;
-            height: auto;
-            display: block;
-            max-height: 400px;
-        }
+        .video-container { display: none; margin-top: 20px; border-radius: 15px; overflow: hidden; border: 2px solid var(--main-color); background: black; }
+        video#final-video { width: 100%; display: block; max-height: 400px; }
         
-        .easter-egg {
-            --main-color: #0088ff !important;
-        }
+        /* Цвет для режима Королёва */
+        .easter-egg { --main-color: #0088ff !important; }
         
-        .stats-text {
-            color: var(--main-color);
-            font-weight: bold;
-        }
-
-        .quiz-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 10px;
-            text-align: left;
-            flex-wrap: wrap;
-        }
-
-        .quiz-top span {
-            display: block;
-        }
-
-        .info-block {
-            margin-top: 20px;
-            border: 1px dashed var(--main-color);
-            padding: 15px;
-            background: rgba(0,210,255,0.05);
-            border-radius: 12px;
-        }
-
-        h1, h2, h3, h4, p {
-            word-break: break-word;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 8px;
-            }
-
-            #game-container {
-                padding: 14px;
-                margin: 6px auto;
-                border-radius: 16px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-                line-height: 1.25;
-            }
-
-            h2 {
-                font-size: 1.35rem;
-            }
-
-            h3 {
-                font-size: 1.05rem !important;
-                line-height: 1.35;
-            }
-
-            .theme-pic {
-                max-height: 240px;
-                margin-bottom: 12px;
-            }
-
-            .option-btn {
-                font-size: 15px;
-                padding: 13px 14px;
-                border-radius: 10px;
-            }
-
-            .btn-main {
-                width: 100%;
-                padding: 14px 16px;
-                font-size: 14px;
-            }
-
-            #commentary {
-                font-size: 0.95em;
-                padding: 12px;
-            }
-
-            .quiz-top {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            #final-res {
-                display: block !important;
-                width: 100%;
-                padding: 10px 12px !important;
-                font-size: 1rem;
-            }
-
-            p[style*="font-size: 0.8em"] {
-                margin-top: 14px !important;
-                line-height: 1.4;
-            }
-        }
-
-        @media (max-width: 380px) {
-            body {
-                padding: 4px;
-            }
-
-            #game-container {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 1.3rem;
-            }
-
-            .option-btn {
-                font-size: 14px;
-            }
-
-            .btn-main {
-                font-size: 13px;
-            }
-        }
+        .stats-text { color: var(--main-color); font-weight: bold; }
     </style>
 </head>
 <body>
@@ -288,18 +83,18 @@
         <p>Пройди викторину о первом полёте человека в космос!</p>
         <input type="text" id="p-name" placeholder="Введите имя пилота..." maxlength="15">
         <br>
-        <button class="btn-main" onclick="start()">Взлёт!</button>
+     <button class="btn-main" onclick="start()">Взлёт!</button>
         <p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Автор проекта:</strong> Олефиренко Владимир, ученик 4Б класса</p>
-        <p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Руководитель:</strong> Кулешина Лариса Николаевна</p>
-        <p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Школа:</strong> ГАОУ МО "Химкинский лицей"</p>
+		<p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Руководитель:</strong> Кулешина Лариса Николаевна</p>
+		<p style="font-size: 0.8em; opacity: 0.6; margin-top: 25px;"><strong>Школа:</strong> ГАОУ МО "Химкинский лицей"</p>
     </div>
 
     <div id="quiz-screen" class="screen">
-        <div class="quiz-top stats-text">
+        <div style="display:flex; justify-content: space-between; margin-bottom: 10px;" class="stats-text">
             <span id="display-name"></span>
             <span>Вопрос: <span id="q-num">1</span>/13 | Счёт: <span id="score">0</span></span>
         </div>
-        <img id="q-img" src="" class="theme-pic" alt="Иллюстрация к вопросу">
+        <img id="q-img" src="" class="theme-pic">
         <h3 id="q-text" style="margin: 10px 0; font-size: 1.1em;"></h3>
         <div id="options"></div>
         <div id="commentary"></div>
@@ -316,11 +111,10 @@
             </video>
         </div>
 
-        <div class="info-block">
+        <div style="margin-top: 20px; border: 1px dashed var(--main-color); padding: 15px; background: rgba(0,210,255,0.05);">
             <h4 style="color: var(--main-color); margin-top: 0;">🏆 Глобальный рейтинг пилотов:</h4>
             <button class="btn-main" onclick="window.open('https://forms.gle/wEzcvEmYMDcgfKW38')">Записать результат</button>
         </div>
-
         <button class="btn-main" onclick="location.reload()" style="margin-top:15px; background:#222; color:#fff; padding: 10px 20px;">Заново</button>
     </div>
 </div>
@@ -403,7 +197,7 @@
             q: "Сколько витков вокруг Земли он совершил?",
             img: "q9.jpg",
             ans: [
-                {t: "2 витка", ok: false, c: "Неверно, 2 витка вокруг Земли совершил безэкипажный 'Буран' в полёте 15 ноября 1988 года"},
+                {t: "2 витка", ok: false, c: "Неверно, 2 витка вокруг Земли совершил автоматический безэкипажный 'Буран' в полёте 15 ноября 1988 года"},
                 {t: "5 витков", ok: false, c: "Неверно, рисковано для первого полёта."},
                 {t: "1 виток", ok: true, c: "Верно! Ровно один круг вокруг планеты."}
             ]
@@ -431,8 +225,8 @@
             img: "q12.jpg",
             ans: [
                 {t: "Внутри спускаемой капсулы", ok: false, c: "Неверно, капсула приземлилась пустой."},
-                {t: "Катапультировался из капсулы и приземлился на парашюте", ok: true, c: "Верно! На высоте 7 км он покинул капсулу и спускался отдельно на парашюте."},
-                {t: "Приводнился в океан в космическом корабле", ok: false, c: "Неверно, он приземлился в поле в Саратовской области, в этом месте сейчас 'Парк покорителей космоса им. Юрия Гагарина'."}
+                {t: "Катапультировался из капсулы и приземлился на парашюте", ok: true, c: "Верно! На высоте 7 км он покинул капсулу и спускался отдельно на парашшюте."},
+                {t: "Приводнился в океан в космическом корабле", ok: false, c: "Неверно, он приземлился в поле в Саратовской области, сейчас в этом месте расположен 'Парк покорителей космоса им. Юрия Гагарина'."}
             ]
         },
         {
@@ -450,13 +244,11 @@
 
     function start() {
         name = document.getElementById('p-name').value.trim();
-        if (!name) return alert("Введите имя пилота!");
-
-        if (name.toLowerCase().replace('ё', 'е') === 'королев') {
+        if(!name) return alert("Введите имя пилота!");
+        if(name.toLowerCase().replace('ё', 'е') === 'королев') {
             isBoss = true;
             document.body.classList.add('easter-egg');
         }
-
         document.getElementById('display-name').innerText = "Пилот: " + name;
         document.getElementById('start-screen').classList.remove('active');
         document.getElementById('quiz-screen').classList.add('active');
@@ -468,7 +260,6 @@
         document.getElementById('q-img').src = q.img;
         document.getElementById('q-text').innerText = q.q;
         document.getElementById('q-num').innerText = current + 1;
-
         let optDiv = document.getElementById('options');
         optDiv.innerHTML = '';
         document.getElementById('commentary').style.display = 'none';
@@ -482,30 +273,23 @@
                 document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
                 document.getElementById('commentary').innerText = a.c;
                 document.getElementById('commentary').style.display = 'block';
-
-                if (a.ok || isBoss) {
-                    b.classList.add('correct');
-                    score++;
-                } else {
-                    b.classList.add('wrong');
+                if(a.ok || isBoss) { b.classList.add('correct'); score++; } 
+                else { 
+                    b.classList.add('wrong'); 
                     document.querySelectorAll('.option-btn').forEach((btn, idx) => {
-                        if (questions[current].ans[idx].ok) btn.classList.add('correct');
+                        if(questions[current].ans[idx].ok) btn.classList.add('correct');
                     });
                 }
-
                 document.getElementById('score').innerText = score;
                 document.getElementById('next-btn').style.display = 'block';
-                document.getElementById('next-btn').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             };
             optDiv.appendChild(b);
         });
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function next() {
         current++;
-        if (current < questions.length) show();
+        if(current < questions.length) show();
         else finish();
     }
 
@@ -513,26 +297,18 @@
         document.getElementById('quiz-screen').classList.remove('active');
         document.getElementById('finish-screen').classList.add('active');
         document.getElementById('final-res').innerText = `Твой результат: ${score} из ${questions.length}`;
-
-        if (isBoss) {
-            document.getElementById('final-title').innerText = "Главный Конструктор: Королёв";
-        }
+        if(isBoss) document.getElementById('final-title').innerText = "Главный Конструктор: Королёв";
         
         const video = document.getElementById('final-video');
         document.getElementById('vid-container').style.display = 'block';
         video.load();
-        video.play().catch(() => console.log("Видео готово к просмотру"));
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        video.play().catch(e => console.log("Видео готово к просмотру"));
     }
 </script>
 
 </body>
+
 </html>
-
-
-
-
 
 
 
